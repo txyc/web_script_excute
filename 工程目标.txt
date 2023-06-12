@@ -6,3 +6,13 @@
 5、selenium + webdriver读取指定网络路径信息——掌握selenium的使用
 6、整合上述所有步骤打包成一套web自动化测试的解决方案
 7、在云服务器上完成上述解决方案的部署，并生成docker镜像
+
+
+//*[@id="uid"]/span
+gitee/github-->dockerhub
+
+带有允许用户输入的服务器docker镜像环境上输入关键参数
+测试类型：登陆测试/登出测试/性能测试/消费测试
+其他参数-->传入到docker启动的jenkins服务
+		-->启动对应包含有对应Python代码的docker镜像
+jenkins镜像调度python镜像完成测试执行-->报告存放到服务器的docker镜像-->统计数据对外呈现

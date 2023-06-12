@@ -1,0 +1,293 @@
+# #############################################
+# 时间：20230610
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+一、实现一个网页服务，将网页上的用户输入参数传递给Python程序去执行，可以按照如下步骤：
+
+1、前端页面设计
+设计一个前端页面，用户可以在该页面上输入需要的参数并提交，示例代码如下：
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>参数输入页面</title>
+</head>
+<body>
+    <form action="/submit" method="post">
+        参数1: <input type="text" name="param1"><br>
+        参数2: <input type="text" name="param2"><br>
+        <input type="submit" value="提交">
+    </form>
+</body>
+</html>
+该页面包含一个表单，用户可以在表单中输入需要的参数，提交后将会将参数提交到后台的/submit接口。
+
+2、后端接口设计
+设计一个后端接口，接收前端输入的参数，并调用Python程序去执行，示例代码如下：
+
+from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return '''
+        <html>
+            <body>
+                <form action="/submit" method="post">
+                    参数1: <input type="text" name="param1"><br>
+                    参数2: <input type="text" name="param2"><br>
+                    <input type="submit" value="提交">
+                </form>
+            </body>
+        </html>
+    '''
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    param1 = request.form.get('param1')
+    param2 = request.form.get('param2')
+
+    # 调用Python程序执行
+    result = my_python_function(param1, param2)
+
+    # 返回执行结果
+    return result
+
+def my_python_function(param1, param2):
+    # 在此处编写你的Python程序，并返回执行结果
+    return f"执行成功！参数1为{param1}，参数2为{param2}"
+上述代码中，定义了两个路由，一个是/，用于显示前端页面，另一个是/submit，用于接收参数并执行Python程序。submit路由中，request.form获取到了前端提交的参数，并将其传递给了my_python_function函数，该函数包含Python程序的执行逻辑，最后将执行结果返回给前端页面。
+
+3、启动web服务
+在Flask应用程序的根目录下新建一个名为app.py（或其他指定的名称），运行以下命令启动Web服务器：
+
+export FLASK_APP=app.py # 设置FLASK_APP环境变量
+flask run # 启动web服务
+运行以上命令后，在浏览器中打开http://127.0.0.1:5000即可访问该页面。
+
+综上所述，通过编写前端页面和后端接口代码，并启动Web服务器，即可实现一个将网页上的用户输入参数传递给Python程序去执行的网页服务。
+
+# #############################################
+# 时间：20230610
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+二、要将网页上的用户输入参数传递给Jenkins配合Python程序执行，可以按照如下步骤：
+
+1、安装jenkinsapi库
+首先需要安装jenkinsapi库，这是一个Python封装Jenkins API的库，可以使用该库进行Jenkins的操作。使用以下命令安装该库：
+
+pip install jenkinsapi
+
+2、编写Python程序
+编写一个Python程序，该程序将会接收前端页面传递的参数，并调用Jenkins API执行对应的任务，示例代码如下：
+
+from jenkinsapi.jenkins import Jenkins
+import time
+
+def execute_jenkins_job(param1, param2):
+    # 建立Jenkins连接
+    jenkins_url = 'http://localhost:8080'
+    jenkins_username = 'your_jenkins_username'  # 替换为你的Jenkins账号
+    jenkins_password = 'your_jenkins_password'  # 替换为你的Jenkins密码
+    jenkins_server = Jenkins(jenkins_url, username=jenkins_username,
+                             password=jenkins_password)
+
+    # 获取Jenkins任务
+    job_name = "your_jenkins_job_name"  # 替换为你的Jenkins任务名称
+    job = jenkins_server.get_job(job_name)
+
+    # 构建Jenkins任务，将参数传递给该任务
+    params = {'param1': param1, 'param2': param2}  # 将前端页面传递的参数封装为params
+    build_number = job.get_next_build_number()
+    job.invoke(build_params=params)
+
+    # 等待任务执行完成
+    build = job.get_build(build_number)
+    while build.is_running():
+        time.sleep(10)
+        build = job.get_build(build_number)
+
+    # 获取任务执行结果
+    result = build.get_status()
+    return result
+上述代码中，使用jenkinsapi库建立与Jenkins的连接，并获取了需要执行的任务。将前端页面传递的参数封装为params，并且调用Jenkins API提交该任务并传递参数。程序会等待任务执行完成，并获取任务执行结果后返回给前端页面。
+
+3、后端接口设计
+设计一个后端接口，接收前端输入的参数，并调用Python程序去执行Jenkins任务，示例代码如下：
+
+from flask import Flask, request
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return '''
+        <html>
+            <body>
+                <form action="/submit" method="post">
+                    参数1: <input type="text" name="param1"><br>
+                    参数2: <input type="text" name="param2"><br>
+                    <input type="submit" value="提交">
+                </form>
+            </body>
+        </html>
+    '''
+
+@app.route('/submit', methods=['POST'])
+def submit():
+    param1 = request.form.get('param1')
+    param2 = request.form.get('param2')
+
+    # 调用Jenkins API执行任务
+    result = execute_jenkins_job(param1, param2)
+
+    # 返回执行结果
+    return result
+上述代码中，定义了两个路由，一个是/，用于显示前端页面，另一个是/submit，用于接收参数并调用Jenkins API执行任务。submit路由中，request.form获取到了前端提交的参数，并将其传递给了execute_jenkins_job函数，该函数执行Jenkins任务，并将执行结果返回给前端页面。
+
+4、启动Web服务器
+在Flask应用程序的根目录下新建一个名为app.py（或其他指定的名称），运行以下命令启动Web服务器：
+
+export FLASK_APP=app.py # 设置FLASK_APP环境变量
+flask run # 启动web服务
+运行以上命令后，在浏览器中打开http://127.0.0.1:5000即可访问该页面。
+
+综上所述，通过编写前端页面和后端接口代码，并启动Web服务器，即可实现一个将网页上的用户输入参数传递给Jenkins配合Python程序执行的网页服务。
+
+# #############################################
+# 时间：20230610
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+三、将Python代码导入到Docker容器的方法：
+
+1、创建一个Dockerfile文件，用于构建Docker镜像。在Dockerfile中，可以指定所需的Python版本和依赖库等信息。
+
+在Dockerfile中使用COPY命令将Python代码复制到Docker容器中。例如，可以使用以下命令将当前目录下的所有Python文件复制到Docker容器的/app目录中：
+
+COPY . /app
+
+2、构建Docker镜像。在终端中进入Dockerfile所在的目录，执行以下命令：
+
+docker build -t my-python-app .
+
+其中，my-python-app是镜像的名称，可以根据需要进行修改。
+
+3、运行Docker容器。执行以下命令启动Docker容器：
+
+docker run -it my-python-app
+
+其中，my-python-app是镜像的名称，可以根据需要进行。
+
+4、在Docker容器中运行Python代码。在Docker容器中，可以使用以下命令运行Python代码：
+
+python app.py
+
+其中，app.py是Python代码的文件名，可以根据需要进行修改。
+
+5、安装依赖库的方法可以在 Dockerfile 文件中使用 RUN 命令来执行，例如：
+
+FROM python:3.9-slim-buster
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+CMD [ "python", "./your_script.py" ]
+其中，requirements.txt 是包含所有要安装依赖库的文件，每个库名称占一行。在上例中，pip install 命令会自动安装这些库。
+
+还可以使用其他方式来安装依赖库，比如使用 apt-get 命令或者手动下载并安装它们。但是，通过使用 pip 来管理依赖库更加方便和高效。
+
+# #############################################
+# 时间：20230610
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+四、使用部署了jenkins的docker容器中执行python程序的方法：
+
+可以使用Jenkins的Docker Pipeline插件来包装建流程，然后在Pipeline脚本中通过Docker命令执行另一个容器中的Python代码。
+
+以下是一个简单的例子：
+
+1、首先，在Jenkins中安装Docker Pipeline插件。
+编写一个包含Dockerfile的Python应用程序，并将其构建为Docker镜像。例如：
+Dockerfile
+FROM python:3
+COPY app.py /app/app.py
+WORKDIR /app
+CMD ["python", "app.py"]
+
+2、在Jenkins中创建一个新的Pipeline项目，然后在Pipeline脚本中引用Docker镜像并执行Python应用程序：
+groovy
+pipeline {
+    agent {
+        docker {
+            image 'python:3'
+        }
+    }
+    stages {
+        stage('Build and Run') {
+            steps {
+                sh '''
+                    docker run --rm -v $(pwd):/app my-python-app python /app/app.py
+                '''
+            }
+        }
+    }
+}
+这个例子假设你已经通过docker build命令将Python应用程序构建为名为my-python-app的Docker镜像，并且位于Jenkins Agent所在的相同主机上。接下来，Docker命令将在容器中启动Python应用程序，并将当前目录挂载到容器内的/app目录中，以便能够访问应用程序文件。
+
+# #############################################
+# 时间：20230610
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+五、使用部署了jenkins的docker容器启动另外一个部署了python执行程序的docker容器，然后执行容器内的python程序
+
+可以使用jenkins的Pipeline功能来创建一个包含两个步骤的流程：
+
+1、启动部署了python执行程序的docker容器，连接到该容器并运行Python程序的方法
+以下是一些示例代码，可以在Jenkins Pipeline中使用：
+
+pipeline {
+  agent {
+    docker {
+      image 'python:3.9'
+      args '-v /path/to/python/files:/app'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'pip install -r requirements.txt'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh 'python my_test.py'
+      }
+    }
+  }
+}
+在这个例子里，我们使用了python:3.9作为Docker镜像，并将本地路径"/path/to/python/files"映射到容器的"/app"路径。然后在Jenkins Pipeline中定义了两个步骤：Build和Test。在Build阶段中，我们安装了python所需的依赖；在Test阶段中，我们运行了my_test.py文件。
+
+二、启动部署了python执行程序的Docker容器，可以使用"Docker"步骤来完成：
+
+pipeline {
+  agent none
+  stages {
+    stage('Deploy Python Container') {
+      agent {
+        docker {
+          image 'python:3.9'
+          args '-v /path/to/python/files:/app'
+        }
+      }
+      steps {
+        sh 'python /app/my_script.py'
+      }
+    }
+  }
+}
+在这个例子里，我们使用了同样的python:3.9 Docker镜像，并将本地路径"/path/to/python/files"映射到容器的"/app"路径。在Deploy Python Container的阶段中，我们使用"Docker"步骤来启动Docker容器，然后运行my_script.py文件。
