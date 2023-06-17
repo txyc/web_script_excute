@@ -303,6 +303,16 @@ const cityName = pm.environment.get("cityName");
 # 将获取到响应的变量提取到全局变量中
 pm.globals.set("city_code",cityCode);
 
+三、postman使用cookies的方法
+用于测试的网址
+电商首页：http://www.testingedu.com.cn:8000/
+登录页面：http://www.testingedu.com.cn:8000/index.php/Home/user/login.html
+购物车页面：http://www.testingedu.com.cn:8000/index.php/Home/Cart/index.html
+http://www.testingedu.com.cn:8000/index.php?m=Home&c=Cart&a=header_cart_list
+
+登陆调用接口：http://www.testingedu.com.cn:8000/index.php?m=Home&c=User&a=do_login&t=0.3508523582926
+查看购物车调用接口：http://www.testingedu.com.cn:8000/index.php?m=Home&c=Cart&a=header_cart_list
+
 # #############################################
 # 时间：20230610
 # 姓名：田鑫
