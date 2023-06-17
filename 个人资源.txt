@@ -1,0 +1,30 @@
+# #######################################################
+百度地图的API接口——可用于天气查询、路径规划等
+
+# 个人ak申请地址
+https://lbsyun.baidu.com/apiconsole/key#/home
+# 天气数据获取接口
+https://api.map.baidu.com/weather/v1/?district_id=222405&output=json&data_type=all&ak=PF3n59XjIRjESKvQmC1GHPTG8GZTGteW
+
+# #########################################################
+roll服务查询——可用于天气、城市id、区号信息、ip、手机归属地等多种查询方法
+
+# 地址
+https://www.mxnzp.com/doc/list
+# 个人 app_id和app_secret：
+APPID: ooyx7tluqonjo1sx
+APPSECRET: NmdvQjI2MjBkRllRNnRuaWJnSUl6dz09
+
+# 天气获取接口
+https://www.mxnzp.com/api/weather/current/深圳市?app_id=ooyx7tluqonjo1sx&app_secret=NmdvQjI2MjBkRllRNnRuaWJnSUl6dz09
+# 城市id获取接口
+https://www.mxnzp.com/api/address/list?app_id=ooyx7tluqonjo1sx&app_secret=NmdvQjI2MjBkRllRNnRuaWJnSUl6dz09
+
+# ############################################################
+用于接口的测试的某个购物车网站
+电商首页：http://www.testingedu.com.cn:8000/
+登录页面：http://www.testingedu.com.cn:8000/index.php/Home/user/login.html
+购物车页面：http://www.testingedu.com.cn:8000/index.php/Home/Cart/index.html
+登陆调用接口：http://www.testingedu.com.cn:8000/index.php?m=Home&c=User&a=do_login&t=0.3508523582926
+查看购物车调用接口：http://www.testingedu.com.cn:8000/index.php?m=Home&c=Cart&a=header_cart_list
+
