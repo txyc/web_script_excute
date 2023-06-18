@@ -22,9 +22,22 @@ https://www.mxnzp.com/api/address/list?app_id=ooyx7tluqonjo1sx&app_secret=NmdvQj
 
 # ############################################################
 用于接口的测试的某个购物车网站
+个人测试账户：18384121601/Admin_123456
 电商首页：http://www.testingedu.com.cn:8000/
 登录页面：http://www.testingedu.com.cn:8000/index.php/Home/user/login.html
 购物车页面：http://www.testingedu.com.cn:8000/index.php/Home/Cart/index.html
 登陆调用接口：http://www.testingedu.com.cn:8000/index.php?m=Home&c=User&a=do_login&t=0.3508523582926
 查看购物车调用接口：http://www.testingedu.com.cn:8000/index.php?m=Home&c=Cart&a=header_cart_list
+
+https://dl.google.com/android/adt/adt-bundle-windows-x86_64-20140702.zip?utm_source=androiddevtools&utm_medium=website
+
+# ############################################################
+Appium的测试环境配置
+华为Mate50E的appium连接配置
+    "platformVersion": "12",
+    "deviceName": "CET-AL60",
+    "platformName": "Android",
+获取方法：
+adb shell getprop ro.build.version.release
+adb devices -l
 

@@ -6,7 +6,7 @@
 软件测试语言、工具方面
 1、掌握python/ruby/C++/shell等语言的编程，git代码管理、冲突处理和多分支控制
 2、熟练掌握linux系统下命令行的使用，熟悉ftp/sftp/radius/tacacs+等服务器的搭建使用等
-3、掌握python+pytest+selenium的web端自动化测试方法和python+pytest+appnium的移动端自动化测试方法
+3、掌握python+pytest+selenium的web端自动化测试方法和python+pytest+appium的移动端自动化测试方法
 4、熟练掌握Postman/Jemeter配套的接口测试、性能测试、压力测试等测试方法
 5、熟练掌握docker虚拟化容器的部署使用和jenkins下测试任务集成执行的方法
 6、掌握wireshark/tcpdump/fiddler/charles等多种抓包工具的使用
