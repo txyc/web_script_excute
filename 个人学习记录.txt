@@ -388,3 +388,67 @@ swagger和openAPI的学习
 3、接下来使用adb命令行获取设备信息和app信息
 4、使用appium-inspector连接手机App进行提取控制元素
 注意：连接不成功时可以考虑重启appium服务器
+
+三、获取手机信息的方法
+1、通过USB连接手机，开启开发者调试模式后下发adb命令获取到设备版本、设备名称的信息
+华为Mate50E的appium连接配置
+    "platformVersion": "12",
+    "deviceName": "CET-AL60",
+    "platformName": "Android",
+获取方法：
+adb shell getprop ro.build.version.release
+adb devices -l
+
+2、将手机和PC连接在统一局域网下，查找到手机连接WiFi的ip后，通过adb命令无线连接到手机，命令如下：
+adb kill-server
+adb tcpip 5555
+adb connect device_ip:5555
+然后在通过步骤1中的命令获取到手机的设备版本、设备名称信息
+
+四、获取手机App信息的方法
+先打开指定App，然后在通过adb命令获取app信息，如计算器的App信息为：
+    "appPackage": "com.huawei.calculator",
+    "appActivity": "com.huawei.calculator.Calculator",
+获取方法：
+adb shell dumpsys activity | findstr "mResume"
+
+# #############################################
+# 时间：20230621
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十、python打开windows下网页后控制文件上传控件的方法——pywinauto
+
+1、首先要安装有pywinauto模块
+pip install pywinauto
+
+2、引入模块内的指定方法后，进行登陆操作，可以通过ViewWizard工具查找windows下文件上传控件的元素的类名用于控制该元素的输入、回车、点击等等操作
+from pywinauto import Desktop
+from pywinauto.keyboard import send_keys
+
+# 创建一个操作桌面窗口的对象
+app=Desktop()
+dlg=app['打开'] #窗口标题打开
+# 打开文件地址
+dlg.window(class_name='ToolbarWindow32', title_re=".*地址.*").click() #选择文件地址输入的控件
+send_keys('E:\\codework\\web_script_excute\\resource') #输入文件地址
+send_keys('{VK_RETURN}') #回车E:\codework\web_script_excute\resource
+# 选中指定文件并打开
+dlg['文件名(&N):Edit'].type_keys('test_pic_01.png') # 选择文件名输入的控件输入文件名
+dlg['打开(&O)'].click() #点击打开按钮
+
+# #############################################
+# 时间：20230622
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十一、python通过selenium登陆后，保持登陆切换网页的方法
+
+针对selenium控制网页免登陆方法总结:
+# 方法一：使用已打开的完成了网页登陆操作的浏览器来避免已登录
+#       需要在浏览器快捷方式属性页的快捷栏后面添加 --remote-debugging-port=9222 --user-data-dir="C:\selenium\ChromeProfile"
+# 方法二：设置用户数据目录免登陆——该方法未实现
+#       将selenium运行chrome的数据临时存储目录设置为长期目录
+# 方法三：登陆指定网址获取cookies后，用于切换到其他网页时保持登陆
+#       cookies的获取使用方法cookies = driver.get_cookies()
+#       cookie添加是需要根据需要过滤，并逐个添加
