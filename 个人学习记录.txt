@@ -378,7 +378,7 @@ swagger和openAPI的学习
 2、安装nodejs
 3、安装appium服务器，可以同时将GUIserver一起装上
 4、安装appium-inspector
-5、安装gdb和对应的gdb手机驱动-华为手机助手，这里要根据手机类型来安装
+5、安装adb和对应的adb手机驱动-华为手机助手，这里要根据手机类型来安装
 6、pip install Appium-Python-Client
 7、安装android studio
 
@@ -445,10 +445,275 @@ dlg['打开(&O)'].click() #点击打开按钮
 十一、python通过selenium登陆后，保持登陆切换网页的方法
 
 针对selenium控制网页免登陆方法总结:
-# 方法一：使用已打开的完成了网页登陆操作的浏览器来避免已登录
-#       需要在浏览器快捷方式属性页的快捷栏后面添加 --remote-debugging-port=9222 --user-data-dir="C:\selenium\ChromeProfile"
-# 方法二：设置用户数据目录免登陆——该方法未实现
-#       将selenium运行chrome的数据临时存储目录设置为长期目录
-# 方法三：登陆指定网址获取cookies后，用于切换到其他网页时保持登陆
-#       cookies的获取使用方法cookies = driver.get_cookies()
-#       cookie添加是需要根据需要过滤，并逐个添加
+方法一：使用已打开的完成了网页登陆操作的浏览器来避免已登录
+    需要在浏览器快捷方式属性页的快捷栏后面添加 --remote-debugging-port=9222 --user-data-dir="C:\selenium\ChromeProfile"
+方法二：设置用户数据目录免登陆——该方法未实现
+    将selenium运行chrome的数据临时存储目录设置为长期目录
+方法三：登陆指定网址获取cookies后，用于切换到其他网页时保持登陆
+    cookies的获取使用方法cookies = driver.get_cookies()
+    cookie添加是需要根据需要过滤，并逐个添加
+方法四：在新标签页或者新窗口中打开登陆连接后完成登陆
+
+# #############################################
+# 时间：20230630
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十二、python使用selenium操作网页的一些常用方法方法
+
+1、界面元素查找的方法
+需要引入模块webdriver以及By
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+使用方法：
+driver=webdriver.Chrome()
+kw1=c.find_element(By.ID,'kw')
+kw2=c.find_element_by_id('kw')
+
+find_element                         #通过指定方法查找指定的第一个元素(需指定两个参数)
+find_element_by_class_name           #通过Class name查找指定的第一个元素
+find_element_by_css_selector         #通过CSS选择器查找指定的第一个元素
+find_element_by_id                   #通过ID查找指定的第一个元素
+find_element_by_link_text            #通过链接文本获取指定的第一个超链接(精确匹配)
+find_element_by_name                 #通过Name查找指定的第一个元素
+find_element_by_partial_link_text    #通过链接文本获取指定的第一个超链接(模糊匹配)
+find_element_by_tag_name             #通过标签名查找指定的第一个元素
+find_element_by_xpath                #通过Xpath语法来指定的第一个元素
+find_elements                        #通过指定方法查找所有元素数组(需指定两个参数)
+find_elements_by_class_name          #通过Class name查找所有元素数组
+find_elements_by_css_selector        #通过CSS选择器查找所有元素数组
+find_elements_by_id                  #通过ID查找所有元素数组
+find_elements_by_link_text           #通过链接文本获取所有超链接数组(精确匹配)
+find_elements_by_name                #通过Name查找所有元素数组
+find_elements_by_partial_link_text   #通过链接文本获取所有超链接数组(模糊匹配)
+find_elements_by_tag_name            #通过标签名查找所有元素数组
+find_elements_by_xpath               #通过Xpath语法来查找所有元素数组
+
+2、浏览器窗口操作
+driver=webdriver.Chrome()
+
+driver.maximize_window()#最大化
+driver.fullscreen_window() #全屏
+driver.minimize_window() #最小化
+driver.get_window_position() #获取窗口的坐标
+driver.get_window_rect()#获取窗口的大小和坐标
+driver.get_window_size()#获取窗口的大小
+driver.set_window_position(100,200)#设置窗口的坐标
+driver.set_window_rect(100,200,32,50)    #设置窗口的大小和坐标
+driver.set_window_size(400,600)#设置窗口的大小
+driver.current_window_handle   #返回当前窗口的句柄
+driver.window_handles         #返回当前会话中的所有窗口的句柄
+
+driver.save_screenshot('1.png')#截图，只支持PNG格式
+driver.get_screenshot_as_png() #获取当前窗口的截图作为二进制数据
+driver.get_screenshot_as_base64() #获取当前窗口的截图作为base64编码的字符串
+
+driver.forward() #前进
+driver.back()  #后退
+driver.refresh()#刷新
+
+driver.close() #关闭当前标签页
+driver.quit() #关闭浏览器并关闭驱动
+
+3、cookies内容获取——常用于免登陆
+driver.get_cookie('BAIDUID') #获取指定键的Cookies
+driver.get_cookies()         #获取所有的Cookies
+for y in driver.get_cookies():
+   x=y
+   if x.get('expiry'):
+       x.pop('expiry')     
+   driver.add_cookie(x) #添加Cookies  
+driver.delete_cookie('BAIDUID') #删除指定键的Cookies内容
+driver.delete_all_cookies() #删除所有cookies
+
+4、元素的操作
+driver.get('https://www.baidu.com')
+kw1=driver.find_element(By.ID,'kw')
+
+kw1.clear()        #清除元素的值
+kw1.click()        #点击元素
+kw1.id             #Selenium所使用的内部ID
+kw1.get_property('background') #获取元素的属性的值
+kw1.get_attribute('id') #获取元素的属性的值
+kw1.location       #不滚动获取元素的坐标
+kw1.location_once_scrolled_into_view  #不滚动且底部对齐并获取元素的坐标
+kw1.parent         #父元素
+kw1.send_keys('')  #向元素内输入值
+kw1.send_keys(Keys.ENTER)  #元素回车
+kw1.size           #大小
+kw1.submit         #提交
+kw1.screenshot('2.png') #截取元素形状并保存为图片
+kw1.tag_name       #标签名
+kw1.text           #内容，如果是表单元素则无法获取
+kw1.is_selected()  #判断元素是否被选中
+kw1.is_enabled()   #判断元素是否可编辑
+kw1.is_displayed   #判断元素是否显示
+kw1.value_of_css_property('color') #获取元素属性的值
+kw1._upload('2.png') #上传文件
+
+5、selenium的鼠标键盘操作
+需要引入模块keys和ActionChains进行操作
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+
+click(on_element=None)                 #鼠标左键单击
+click_and_hold(on_element=None)        #单击鼠标左键，不松开
+context_click(on_element=None)         #单击鼠标右键
+double_click(on_element=None)          #双击鼠标左键
+drag_and_drop(source,target)           #拖拽到某个元素然后松开
+drag_and_drop_by_offset(source,xoffset,yoffset) #拖拽到某个坐标然后松开
+key_down(value,element=None)     #按下键盘上的某个键
+key_up(value, element=None)      #松开键盘上的某个键
+move_by_offset(xoffset, yoffset)  #鼠标从当前位置移动到某个坐标
+move_to_element(to_element)        #鼠标移动到某个元素
+move_to_element_with_offset(to_element, xoffset, yoffset) #移动到距某个元素（左上角坐标）多少距离的位置
+pause(seconds)                  #暂停所有输入(指定持续时间以秒为单位)
+perform()                       #执行所有操作
+reset_actions()                 #结束已经存在的操作并重置
+release(on_element=None)       #在某个元素位置松开鼠标左键
+send_keys(*keys_to_send)        #发送某个键或者输入文本到当前焦点的元素
+send_keys_to_element(element, *keys_to_send) #发送某个键到指定元素
+
+6、selenium的一些浏览器属性设置
+from selenium.webdriver.chrome.options import Options
+o=Options()
+
+o.add_argument('--headless')#无界面浏览
+o.add_argument('--window-size=600,600') #设置窗口大小
+o.add_argument('--incognito') #无痕模式
+o.add_argument('--disable-infobars') #去掉chrome正受到自动测试软件的控制的提示
+o.add_argument('user-agent="XXXX"') #添加请求头
+o.add_argument("--proxy-server=http://200.130.123.43:3456")#代理服务器访问
+o.add_experimental_option('excludeSwitches', ['enable-automation'])#开发者模式
+o.add_experimental_option("prefs",{"profile.managed_default_content_settings.images": 2})#禁止加载图片
+o.add_experimental_option('prefs',
+{'profile.default_content_setting_values':{'notifications':2}}) #禁用浏览器弹窗
+o.add_argument('blink-settings=imagesEnabled=false')  #禁止加载图片
+o.add_argument('lang=zh_CN.UTF-8') #设置默认编码为utf-8
+o.add_extension(create_proxyauth_extension(
+           proxy_host='host',
+           proxy_port='port',
+           proxy_username="username",
+           proxy_password="password"
+       ))# 设置有账号密码的代理
+o.add_argument('--disable-gpu')  # 这个属性可以规避谷歌的部分bug
+o.add_argument('--disable-javascript')  # 禁用javascript
+o.add_argument('--hide-scrollbars')  # 隐藏滚动条
+o.binary_location=r"C:\Users\Administrator\AppData\Local\Google\Chrome\Application" #指定浏览器位置
+o.add_argument('--no-sandbox')  #解决DevToolsActivePort文件不存在的报错
+
+7、浏览器界面判断
+需要引入模块Expected_Conditions，简称为EC
+from selenium.webdriver.support import expected_conditions as EC
+
+EC.title_contains('')(c)#判断页面标题是否包含给定的字符串
+EC.presence_of_element_located('')(c) #判断某个元素是否加载到dom树里，该元素不一定可见
+EC.url_contains('')(c) #判断当前url是否包含给定的字符串
+EC.url_matches('')(c) #匹配URL
+EC.url_to_be('')(c)  #精确匹配
+EC.url_changes('')(c) #不完全匹配
+EC.visibility_of_element_located('')(c) #判断某个元素是否可见,可见代表元素非隐藏元素
+EC.visibility_of('')(c)   #跟上面一样，不过是直接传定位到的element
+EC.presence_of_all_elements_located('')(c) #判断是否至少有1个元素存在于dom树中
+EC.visibility_of_any_elements_located('')(c) #判断是否至少一个元素可见，返回列表
+EC.visibility_of_all_elements_located('')(c) #判断是否所有元素可见，返回列表
+EC.text_to_be_present_in_element('')(c) #判断元素中的text是否包含了预期的字符串
+EC.text_to_be_present_in_element_value('')(c)#判断元素中value属性是否包含预期的字符串
+EC.frame_to_be_available_and_switch_to_it('')(c) # 判断该frame是否可以switch进去
+EC.invisibility_of_element_located('')(c) #判断某个元素是否不存在于dom树或不可见
+EC.element_to_be_clickable('')(c) #判断某个元素中是否可见并且可点击
+EC.staleness_of('')(c)  #等某个元素从dom树中移除
+EC.element_to_be_selected('')(c)  #判断某个元素是否被选中了,一般用在下拉列表
+EC.element_located_to_be_selected('')(c) #判断元组中的元素是否被选中
+EC.element_selection_state_to_be('')(c) #判断某个元素的选中状态是否符合预期
+EC.element_located_selection_state_to_be('')(c) #跟上面一样，只不过是传入located
+EC.number_of_windows_to_be('')(c)  #判断窗口中的数字是否符合预期
+EC.new_window_is_opened('')(c)  #判断新的窗口是否打开
+EC.alert_is_present('')(c)  #判断页面上是否存在alert
+
+8、浏览器弹窗处理
+
+
+# #############################################
+# 时间：20230701
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十三、mysql数据库的基本使用
+
+1、数据库和数据表的创建使用
+create database usr_contact_info; # 创建名为usr_contact_info的数据库
+
+2、使用数据库usr_contact_info用于创建数据表
+use usr_contact_info; # 使用数据库usr_contact_info
+create table usr_contact_info(
+`序号` INT UNSIGNED AUTO_INCREMENT,
+`姓名` VARCHAR(10) NOT NULL,
+`联系方式` VARCHAR(11) NOT NULL,
+`住址` VARCHAR(100) NOT NULL,
+`接待人` VARCHAR(10) NOT NULL,
+PRIMARY KEY ( `序号` )); # 创建带有列值的数据表usr_contact_info
+
+3、插入数据
+INSERT INTO usr_contact_info ( 姓名, 联系方式, 住址, 接待人 )
+                       VALUES
+                       ( '张飞', '18654265642', '都市武侯区蜀都大道富贵花园小区9栋1单元', '王凯' );
+
+4、查询、更新、删除数据
+格式如下：
+SELECT column_name,column_name FROM table_name [WHERE Clause][LIMIT N][ OFFSET M]
+UPDATE table_name SET field1=new-value1, field2=new-value2 [WHERE Clause]
+DELETE FROM table_name [WHERE Clause]
+
+5、扩展方法使用
+like子句——
+
+# #############################################
+# 时间：20230701
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十四、python使用mysql数据库的基本方法
+
+1、首先需要安装一个支持mysql的库，例如：
+pip install pymysql
+
+2、连接指定的数据库
+# 打开数据库连接，参数1：主机名或IP；参数2：用户名；参数3：密码；参数4：数据库名
+db = pymysql.connect(host='localhost', user='root', password='Tianxin_2015', database='usr_contact_info')
+
+3、创建新的数据表
+# 使用cursor()创建一个cursor对象
+cursor = db.cursor()
+# 创建数据库和数据表
+cursor.execute("drop table if exists usr_contact_info")
+sql = """create table usr_contact_info (
+         `序号`  INT UNSIGNED AUTO_INCREMENT,
+         `姓名`  CHAR(10),
+         `联系方式` CHAR(11),  
+         `住址` CHAR(30),
+         `接待人` CHAR(10),
+         PRIMARY KEY ( `序号` ) )"""
+cursor.execute(sql)
+
+4、插入外部数据
+# 外部导入的数据
+data_test = [
+            ['张三','15023481157','成都市武侯区蜀都大道富贵花园小区2栋1单元','王凯'],
+            ['李四','15420135526','成都市武侯区蜀都大道富贵花园小区12栋2单元','王凯'],
+            ['王五','18654265531','成都市武侯区蜀都大道富贵花园小区9栋1单元','王凯'],
+            ['赵六','19454265623','成都市武侯区蜀都大道富贵花园小区8栋1单元','王凯']
+        ]
+cursor.executemany("insert into usr_contact_info(姓名,联系方式,住址,接待人) values (%s,%s,%s,%s)", data_test)
+db.commit()
+
+5、查询数据表的内容
+# 使用execute()方法执行SQL查询
+rs = cursor.execute("select * from usr_contact_info;")
+print(rs)
+# 查询第一条数据
+rs_data_one = cursor.fetchone()
+print(rs_data_one)
+# 查询所有数据
+rs_data_all = cursor.fetchall()
+print(rs_data_all)

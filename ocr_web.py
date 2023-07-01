@@ -55,10 +55,10 @@ class Ocr_web(object):
         return browser, cookies
 
     # 该函数用于上传图片到指定网址进行文字提取
-    def upload_transfer_picture(self, new_browser,cookies, web_url, pathlist):
+    def upload_transfer_picture(self, new_browser, cookies, web_url, pathlist):
         # 创建浏览器实例，连接指定的网址
 
-        # 创建浏览器选项实例
+        # # 创建浏览器选项实例
         # chrome_options = webdriver.ChromeOptions()
         # # 打开已有的浏览器，用于调试时免登陆
         # chrome_options.add_experimental_option("debuggerAddress", "127.0.0.1:9222")
@@ -99,6 +99,7 @@ class Ocr_web(object):
             text_content = pic_char_element.text
             print(text_content)
         # new_browser.close()
+        
 
 if __name__ == "__main__":
     ocr_web = Ocr_web()
@@ -109,5 +110,5 @@ if __name__ == "__main__":
     password = "Tianxin_2015"
     yaml_path = './session.yaml'
     browser, cookies = ocr_web.login_save_session(login_url, username, password)
-    print(cookies)
+    # print(cookies)
     ocr_web.upload_transfer_picture(browser, cookies, web_url, picpathlist)
