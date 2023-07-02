@@ -120,13 +120,14 @@ class Ocr_web(object):
                     break
                 table_list.append(test_each)
             for test_each in text_list[index_test:]:
-                if text_list.index(test_each) % index_test == 0:
-                    if len(each_test_list) > 0:
-                        data_list.append(each_test_list)
-                    each_test_list = []
                 each_test_list.append(test_each)
+                if text_list.index(test_each) % index_test == index_test - 1:
+                    if len(each_test_list) > 0:
+                        data_list.append(each_test_list[1:])
+                    each_test_list = []
         return table_list, data_list
         # new_browser.close()
+
 
     def insert_data_to_mysql(self, host, user, password, database, table_list, data_list):
         # 打开数据库连接，参数1：主机名或IP；参数2：用户名；参数3：密码；参数4：数据库名
@@ -134,20 +135,11 @@ class Ocr_web(object):
 
         # 使用cursor()创建一个cursor对象
         cursor = db.cursor()
-        # 创建数据库和数据表
-        cursor.execute("drop table if exists usr_contact_info")
-        sql = """create table usr_contact_info (
-            `序号`  INT UNSIGNED AUTO_INCREMENT,
-            `姓名`  CHAR(10),
-            `联系方式` CHAR(11),  
-            `住址` CHAR(30),
-            `接待人` CHAR(10),
-            PRIMARY KEY ( `序号` ) )"""
-        cursor.execute(sql)
-
-        cursor.executemany("insert into usr_contact_info(序号,姓名,联系方式,住址,接待人) values (%s,%s,%s,%s,%s)", data_list)
+        # 在数据库中插入数据
+        cursor.executemany("insert into usr_contact_info(姓名,联系方式,住址,接待人) values (%s,%s,%s,%s)", data_list)
         db.commit()
         # 查询所有数据
+        cursor.execute("select * from usr_contact_info;")
         rs_data_all = cursor.fetchall()
         print(rs_data_all)
         # 关闭数据库
@@ -163,5 +155,8 @@ if __name__ == "__main__":
     yaml_path = './session.yaml'
     # browser, cookies = ocr_web.login_save_session(login_url, username, password)
     # print(cookies)
+
+
+
     table_list, data_list = ocr_web.upload_transfer_picture(web_url, picpathlist)
     ocr_web.insert_data_to_mysql("localhost", "root", "Tianxin_2015", "usr_contact_info", table_list, data_list)
