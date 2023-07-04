@@ -1,4 +1,10 @@
 # #######################################################
+winndows下的jenkins服务
+http://localhost:6535/ root/Tianxin_2015
+http://121.43.189.123:8099/ admin/14348e6e11a74135885ce97ae50b24e6
+http://121.43.189.123:9095/ admin/b30253c32b4e4db7b53c08a7279a4183
+
+# #######################################################
 百度地图的API接口——可用于天气查询、路径规划等
 
 # 个人ak申请地址
@@ -32,6 +38,18 @@ https://www.mxnzp.com/api/address/list?app_id=ooyx7tluqonjo1sx&app_secret=NmdvQj
 https://dl.google.com/android/adt/adt-bundle-windows-x86_64-20140702.zip?utm_source=androiddevtools&utm_medium=website
 
 # ############################################################
+用于接口测试的自动化平台——18384121601/Admin_123456
+http://39.108.55.18/mypro/#/home
+
+登陆接口：http://39.108.55.18/mypro/api/user/login
+
+# ############################################################
+用于接口测试的token项目
+http://www.testingedu.com.cn:8081/inter/
+
+登陆接口：http://www.testingedu.com.cn:8081/inter/SOAP?wsdl
+
+# ############################################################
 Appium的测试环境配置
 华为Mate50E的appium连接配置
     "platformVersion": "12",
@@ -41,3 +59,33 @@ Appium的测试环境配置
 adb shell getprop ro.build.version.release
 adb devices -l
 
+先打开指定App，然后在通过adb命令获取app信息
+	"appPackage": "com.huawei.calculator",
+    "appActivity": "com.huawei.calculator.Calculator",
+获取方法：
+adb shell dumpsys activity | findstr "mResume"
+
+
+
+<a href="/Home/Goods/goodsInfo/id/564.html">鼎峰第二</a>
+
+<div class="_highlighter-box_619e8 _inspected-element-box_619e8" style="left: 49.25px; top: 375px; width: 173.25px; height: 31.5px;"><div></div></div>
+
+接口测试：Postman/Jemeter
+自动化测试：unittest-->pytest/allure
+自动化工具：selenium-->网页控制、appium-->移动端控制
+自动化工程部署：Jenkins/Docker
+抓包分析：wireshark/tcpdump/fiddler/charles/sniffer
+
+代码规范-->pylint/rubocop/codemars/cppcheck
+渗透测试、
+
+业务逻辑控制：
+1、获取一些手动填好的excel表格，包含姓名、电话号码、来访目的、接待人等信息的照片
+2、找一个提取图片信息的网络服务——>读取图片结果然后展示在网页中
+3、调用2中的网页服务读取1中的数据，并将数据提取出来
+4、将3中的数据存入数据库、excel表
+
+1、网页上定期读取指定文件夹下面的照片，启动jenkins服务
+2、提供给jenkins一个照片路径参数，启动一个docker服务
+3、启动docker服务执行业务逻辑

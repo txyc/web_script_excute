@@ -14,6 +14,7 @@ from pywinauto import Desktop
 from pywinauto.keyboard import send_keys  # 键盘操作
 import time
 import pymysql
+import argparse
 
 PicFormList = ['.jpg', '.jpeg', '.dds', '.psd', '.gif', '.bmp', '.png']
 
@@ -61,26 +62,26 @@ class Ocr_web(object):
         return browser, cookies
 
     # 该函数用于上传图片到指定网址进行文字提取
-    def upload_transfer_picture(self, web_url, pathlist):
+    def upload_transfer_picture(self, new_browser, cookies, web_url, pathlist):
         # 创建浏览器实例，连接指定的网址
 
-        # 创建浏览器选项实例
-        chrome_options = webdriver.ChromeOptions()
-        # 打开已有的浏览器，用于调试时免登陆
-        chrome_options.add_experimental_option(
-            "debuggerAddress", "127.0.0.1:9222")
-        new_browser = webdriver.Chrome(options=chrome_options)
+        # # 创建浏览器选项实例
+        # chrome_options = webdriver.ChromeOptions()
+        # # 打开已有的浏览器，用于调试时免登陆
+        # chrome_options.add_experimental_option(
+        #     "debuggerAddress", "127.0.0.1:9222")
+        # new_browser = webdriver.Chrome(options=chrome_options)
 
-        # # 添加免登陆的cookies
-        # for cookie in cookies:#列表
-        #     if cookie['domain'] == '.baidu.com':
-        #         print(cookie)
-        #         new_browser.add_cookie({'domain':'.baidu.com',#添加cookie
-        #                             'name':cookie['name'],
-        #                             'value':cookie['value'],
-        #                             'path':'/',
-        #                             'expires':None})
-        #         break
+        # 添加免登陆的cookies
+        for cookie in cookies:#列表
+            if cookie['domain'] == '.baidu.com':
+                print(cookie)
+                new_browser.add_cookie({'domain':'.baidu.com',#添加cookie
+                                    'name':cookie['name'],
+                                    'value':cookie['value'],
+                                    'path':'/',
+                                    'expires':None})
+                break
 
         # 切换到指定网址
         new_browser.get(web_url)
@@ -98,7 +99,7 @@ class Ocr_web(object):
             dlg.window(class_name='ToolbarWindow32',
                        title_re=".*地址.*").click()  # 选择文件地址输入的控件
             send_keys(os.path.split(picpath)[0])  # 输入文件地址
-            # 回车E:\codework\web_script_excute\resource
+            # 回车
             send_keys('{VK_RETURN}')
 
             dlg['文件名(&N):Edit'].type_keys(
@@ -122,7 +123,7 @@ class Ocr_web(object):
             for test_each in text_list[index_test:]:
                 each_test_list.append(test_each)
                 if text_list.index(test_each) % index_test == index_test - 1:
-                    if len(each_test_list) > 0:
+                    if len(each_test_list) > 1:
                         data_list.append(each_test_list[1:])
                     each_test_list = []
         return table_list, data_list
@@ -143,20 +144,47 @@ class Ocr_web(object):
         rs_data_all = cursor.fetchall()
         print(rs_data_all)
         # 关闭数据库
+
         db.close()
 
 if __name__ == "__main__":
+
+    default_pic_path = "E:/codework/web_script_excute/resource/"
+    default_ocr_login_url = "https://login.bce.baidu.com/?account="
+    default_ocr_transfer_url = "https://cloud.baidu.com/product/ocr/general?p=%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA&from=experience"
+    default_ocr_username = "18384121601"
+    default_ocr_password = "Tianxin_2015"
+    default_sql_url = 'localhost'
+    default_sql_username = "root"
+    default_sql_password = "Tianxin_2015"
+    default_database = "usr_contact_info"
+
+    parser = argparse.ArgumentParser(usage='test',description='please input paras')
+    parser.add_argument('-p', '--pic_path', dest='pic_path', type=str, default=default_pic_path, help='please imput picture path')
+    parser.add_argument('-ol', '--ocr_login_url', dest='ocr_login_url', type=str, default=default_ocr_login_url, help='please imput ocr login url')
+    parser.add_argument('-ot', '--ocr_transfer_url', dest='ocr_transfer_url', type=str, default=default_ocr_transfer_url, help='please imput ocr transfer url')
+    parser.add_argument('-on', '--ocr_username', dest='ocr_username', type=str, default=default_ocr_username, help='please imput ocr login name')
+    parser.add_argument('-op', '--ocr_password', dest='ocr_password', type=str, default=default_ocr_password, help='please imput ocr login password')
+    parser.add_argument('-su', '--sql_url', dest='sql_url', type=str, default=default_sql_url, help='please imput sql url')
+    parser.add_argument('-sn', '--sql_username', dest='sql_username', type=str, default=default_sql_username, help='please imput sql username')
+    parser.add_argument('-sp', '--sql_password', dest='sql_password', type=str, default=default_sql_password, help='please imput sql password')
+    parser.add_argument('-d', '--database', dest='database', type=str, default=default_database, help='please imput sql database')
+    args = parser.parse_args()
+
+    pic_path = args.pic_path
+    ocr_login_url = args.ocr_login_url
+    ocr_transfer_url = args.ocr_transfer_url
+    ocr_username = args.ocr_username
+    ocr_password = args.ocr_password
+    sql_url = args.sql_url
+    sql_username = args.sql_username
+    sql_password = args.sql_password
+    database = args.database
+
     ocr_web = Ocr_web()
-    picpathlist = ocr_web.get_picture_list("./resource/")
-    login_url = "https://login.bce.baidu.com/?account="
-    web_url = "https://cloud.baidu.com/product/ocr/general?p=%E5%8A%9F%E8%83%BD%E6%BC%94%E7%A4%BA&from=experience"
-    username = "18384121601"
-    password = "Tianxin_2015"
-    yaml_path = './session.yaml'
-    # browser, cookies = ocr_web.login_save_session(login_url, username, password)
-    # print(cookies)
+    picpathlist = ocr_web.get_picture_list(pic_path)
+    new_browser, cookies = ocr_web.login_save_session(ocr_login_url, ocr_username, ocr_password)
+    # 
 
-
-
-    table_list, data_list = ocr_web.upload_transfer_picture(web_url, picpathlist)
-    ocr_web.insert_data_to_mysql("localhost", "root", "Tianxin_2015", "usr_contact_info", table_list, data_list)
+    table_list, data_list = ocr_web.upload_transfer_picture(new_browser, cookies, ocr_transfer_url, picpathlist)
+    ocr_web.insert_data_to_mysql(sql_url, sql_username, sql_password, database, table_list, data_list)
