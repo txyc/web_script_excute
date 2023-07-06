@@ -119,7 +119,7 @@ class Ocr_web(object):
                 if test_each.isdigit():
                     index_test = text_list.index(test_each)
                     break
-                table_list.append(test_each)
+            table_list=text_list[1:index_test]
             for test_each in text_list[index_test:]:
                 each_test_list.append(test_each)
                 if text_list.index(test_each) % index_test == index_test - 1:
@@ -137,15 +137,17 @@ class Ocr_web(object):
         # 使用cursor()创建一个cursor对象
         cursor = db.cursor()
         # 在数据库中插入数据
-        cursor.executemany("insert into usr_contact_info(姓名,联系方式,住址,接待人) values (%s,%s,%s,%s)", data_list)
+        cursor.executemany("insert into usr_contact_info({}) values (%s,%s,%s,%s)".format(",".join(table_list)), data_list)
         db.commit()
         # 查询所有数据
+
         cursor.execute("select * from usr_contact_info;")
         rs_data_all = cursor.fetchall()
         print(rs_data_all)
         # 关闭数据库
 
         db.close()
+        return rs_data_all
 
 if __name__ == "__main__":
 
