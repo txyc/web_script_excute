@@ -268,30 +268,23 @@ http://10.46.140.112:9957/index.html
 
 http协议的get和post方法的差异
 
-一、操作步骤
+一、chatgpt操作步骤
 1、安装Postman：
 Postman可以从官方网站（https://www.postman.com/downloads/）下载并安装。根据自己的操作系统选择对应的版本。
-
 安装Postman时会遇到安装依赖软件.net framwork失败的情况，此时可以直接从如下链接下载安装
 .net 4.5的安装：https://www.microsoft.com/en-us/download/confirmation.aspx?id=42642
-
 2、创建测试集合Create Collection——相当于测试套
 在Postman界面中可以创建测试集合并添加测试用例。集合是测试用例的容器，方便管理和执行测试用例。
-
 3、创建测试用例：
 在刚才创建的集合中，可以添加测试用例。Add folder用于创建文件夹用于管理测试用例，Add request用于添加测试用例。
-
 4、发送请求：
 在测试用例中可以选择请求方式，如GET、POST、PUT、DELETE等，并添加请求参数和请求头等信息。请求参数和请求头的值可以使用Postman的变量来动态的获取。
 GET的请求参数在Params中添加；Post的请求参数在Body中添加，常用形式form-data
-
 5、验证响应：
 Postman发送请求后，会收到API的响应。可以在响应中验证请求是否正确。对于XML或JSON格式的响应，可以使用Postman提供的格式美化和高亮功能来更方便的查看响应内容。
-
 6、断言检查：
 可以通过添加断言验证API响应是否符合预期结果。Postman内置了许多断言函数，可以根据需要选择使用。
 形如：tests['判断是否获取到了城市编码'] =cityCode != null
-
 7、执行测试：
 在测试用例编写完后，可以单独运行测试用例或运行整个测试集合。运行测试时可以看到测试结果，并能根据结果进行调整。
 
@@ -320,29 +313,38 @@ http://www.testingedu.com.cn:8000/index.php?m=Home&c=Cart&a=header_cart_list
 # #############################################
 六、使用JMeter进行性能测试的步骤：
 
+一、chatgpt使用说明
 1、下载并安装JMeter：
 JMeter可以从官方网站（https://jmeter.apache.org/download_jmeter.cgi）下载。根据自己的操作系统下载并安装JMeter。
-
 2、创建测试计划：
 在JMeter中，测试计划是测试的基本单位。在左侧的树形结构中，右键点击“测试计划”，选择“添加”-“线程组”，创建一个线程组。
-
 3、添加线程：
 在刚创建的线程组中，右键点击选择“添加”-“线程（用户）”，配置线程数、循环次数等相关参数。
-
 4、添加协议：
 对于Web应用程序，可以添加HTTP协议来测试应用程序的性能。在刚才创建的线程组中，右键点击选择“添加”-“协议”-“HTTP请求默认值”，在“Web服务器”中输入应用程序的地址。
-
 5、添加请求：
 在刚才添加的线程中，右键选择“添加”-“HTTP请求”，在输入框中输入请求的URL。
-
 6、配置请求参数：
 可以在HTTP请求中添加参数，如GET/POST方法、请求参数、请求头、Cookie等。
-
 7、添加监听器：
 JMeter提供很多种监听器来显示测试结果。可以通过添加监听器来观察测试结果。
-
 8、运行测试：
 配置完成后，点击菜单栏中的“运行”-“启动”按钮来启动测试。
+
+二、快速理解
+1、基本设置方法，主要可以参考下述快速操作去理解
+测试计划-->线程组--|->取样器--http请求——用于配置请求的url、请求方法、请求参数等等
+                  |->监听器--查看结果树/聚合报告/图形结果/汇总图——用于呈现请求的响应结果
+
+2、强化操作，主要是参数设置和断言设置
+参数设置蛀牙有3种设置方法：前置处理器下的用户参数、配置元件下的用户定义的变量、配置元件下的CSV数据文件设置
+断言设置根据请求响应的具体情况选择断言类型，例如响应断言
+
+参数的引用方法${param}
+
+3、进阶操作，http cookie管理器，前置和后置处理器
+从响应中提取参数的方法：添加后置处理器——json提取器/边界提取器/正则表达式提取器等等，选择body和响应头提取数据
+
 
 # #############################################
 # 时间：20230610
@@ -411,6 +413,19 @@ adb connect device_ip:5555
     "appActivity": "com.huawei.calculator.Calculator",
 获取方法：
 adb shell dumpsys activity | findstr "mResume"
+
+五、android自动化元素辅助定位的工具，个人使用的主要有3种，appium inspector/uiautomatorviewer/weditor，其中
+    1、appium inspector：
+        优势：支持ios和android
+        劣势：需配合appium server一起安装使用；使用网络连接时，按钮点击、输入，页面刷新时，切换过程中耗时较长，建议使用USB连接使用
+    2、uiautomatorviewer——限制太大，当前个人不再使用
+        优势：android sdk安装好后自带
+        劣势：但仅支持android，并且android8以上需要修改批处理脚本，强制依赖Java1.8版本
+    3、weditor——基于uiautomator2库进行元素控制
+        优势：支持ios和android，无需事先连接appium服务器；无线连接手机进行元素定位时，元素操作的切换耗时较短
+        劣势：需要额外使用python的pip安装；可能会存在版本不配套问题，此时需要指定版本安装 pip install weditor==0.6.4；启动需要python -m uiautomator2 init --> python -m weditor
+
+注意：使用上述3种工具定位元素信息可能不一致，建议根据需要进行选择使用
 
 # #############################################
 # 时间：20230621
@@ -666,7 +681,12 @@ UPDATE table_name SET field1=new-value1, field2=new-value2 [WHERE Clause]
 DELETE FROM table_name [WHERE Clause]
 
 5、扩展方法使用
-like子句——
+like子句——用于匹配类似"%match_str"的数据
+union操作符——用于将不同表中的相同列中查询的数据展示出来，带all参数时可以包含重复数据
+order by子句——用于指定按照哪个字段哪种方式进行排序
+group by子句——用于根据指定的字段值对结果集进行分组，另外在分组的列可使用count/sum/avg等函数提取字段数据信息
+join on操作符——主要有inner join/left join/right join三种方式连接不同数据表，通过on判断子句实现两表之间查询字段的过滤
+
 
 # #############################################
 # 时间：20230701
@@ -717,3 +737,217 @@ print(rs_data_one)
 # 查询所有数据
 rs_data_all = cursor.fetchall()
 print(rs_data_all)
+
+# #############################################
+# 时间：20230713
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十五、Ros2/Autosar/Apollo等自动驾驶操作系统的异同点
+
+Ros2、Autosar和Apollo都是自动驾驶操作系统，它们在某些方面有着相似之处，但也存在一些重要的区别。
+
+1. ROS2（Robot Operating System 2）是一个开源的机器人操作系统，旨在提供一种通用的软件开发框架。ROS2提供了一系列工具、库和通信机制，方便开发者创建和管理各种机器人应用。ROS2具有良好的可扩展性和灵活性，可以支持多种硬件平台和通信协议。
+
+2. AUTOSAR（AUTomotive Open System ARchitecture）是汽车行业中的标准化软件架构。Autosar旨在提供一种标准化的软件开发平台，实现汽车电子系统的可靠性、安全性和可重用性。Autosar定义了一系列软件组件和接口标准，可以使不同供应商的汽车电子控制单元（ECU）之间进行高效的通信和协作。
+
+3. Apollo是百度开发的开源自动驾驶平台，提供完整的自动驾驶解决方案。Apollo包括感知、感知规划、决策、控制等模块，以及高精度地图、定位等关键技术。Apollo提供了全栈的解决方案，旨在支持自动驾驶汽车的开发、测试和部署。
+
+在功能和设计方面，这三个系统有一些不同之处。ROS2是一个通用的机器人操作系统，而Autosar和Apollo更专注于自动驾驶领域。Autosar关注汽车电子系统的标准化和互操作性，而Apollo则提供完整的自动驾驶解决方案。
+
+此外，ROS2和Autosar都是开源的，可以进行自由的定制和扩展，而Apollo虽然也是开源的，但是在商业应用中有一些专有的版本和功能。
+
+总而言之，Ros2、Autosar和Apollo都是用于自动驾驶领域的操作系统，它们都有各自的特点和优势，选择合适的操作系统取决于具体的应用场景和需求。
+
+# #############################################
+# 时间：20230719
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十六、docker镜像的创建即相关配置，命令行的解析
+
+一、docker镜像的创建方法
+    docker镜像的创建主要有两种实现方式：Dockerfile方式和容器方式
+1、Dockerfile方式
+创建一个Dockerfile文件，包含一下内容：
+    From centos:7 # 基础镜像
+    RUN yum update -y && yum install -y httpd && yum clean all # 安装指定的服务
+    ADD index.html /var/www/html # 添加服务入口文件
+    EXPOSE 80 # 暴露服务接口
+    CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"] # 启动服务器
+执行构建镜像的命令：
+    docker build -t my-httpd .
+
+2、容器方式
+启动一个基础镜像容器后，在容器中安装配置相关服务后，提交容器为镜像，执行命令行如下：
+    docker run -itd --name my-httpd -p 8080:80 centos:7 # 使用基础镜像创建容器
+    docker exec -it my-httpd bash # 进入容器命令行
+    yum update -y && yum install -y httpd && yum clean all # 安装所需服务
+    echo "Hello, Docker!" >/var/www/html/index.html # 编辑服务入口程序
+    exit # 退出容器命令行
+    docker commit my-httpd my-httpd:latest # 提交容器镜像
+
+二、dockerfile配置文件的语法解析-仅解析最新版本
+【常用】
+FROM -> 指定基础镜像，用于后续的执行构建
+LABEL -> 添加键值对形式的镜像元数据，用于指定Dockerfile的作者，老命令为MAINTAINER
+RUN -> 在构建过程中在镜像中执行命令
+ADD -> 将文件、目录或远程URL复制到镜像中
+WORKDIR -> 设置后续指令的工作目录
+VOLUME -> 为容器创建挂载点或声明卷
+EXPOSE -> 声明容器运行时监听的特定网络接口
+CMD -> 指定容器创建时的默认命令，可以被覆盖
+【补充】 
+ENTRYPOINT -> 设置容器创建时的主要命令，不可被覆盖
+ENV -> 在容器内部设置环境变量
+COPY -> 将文件或目录复制到镜像中
+USER -> 指定后续指令的用户上下文
+ARG -> 定义在构建过程中传递给构建器的变量，可使用docker build命令设置
+ONBUILD -> 当该镜像被用作另一个构建过程的基础是，添加触发器
+STOPSIGNAL -> 设置发送给容器以退出的系统调用信号
+HEALTHCHECK -> 定义周期性检查容器健康状态的命令
+SHELL -> 覆盖Docker默认的shell，用于RUN、CMD和ENTRYPOINT指令
+
+三、docker操作的常用命令/参数解析
+1、docker run创建一个新的容器并运行一个命令
+docker create创建一个新的容器但不启动它
+
+docker run/create [options] image [command] [arg...]
+-d -> 以后台模式启动一个容器
+-P -> 随机端口映射，容器内部端口随机映射到主机的端口
+-p -> 指定端口映射，宿主端口:容器端口
+--name="test_docker" -> 为容器指定一个名称
+-h "docker_test" -> 指定容器的hostname
+-e username="txyc" -> 设置环境变量
+--env-file=[] -> 从指定文件读取环境变量
+-m -> 设置容器使用内存最大值
+--expose=[] -> 开发一个或者一组端口
+--volume,-v -> 绑定一个卷
+【示例】
+docker run -d -uroot -p 9095:8080 -p 50000:50000 --name jenkins -v /usr/local/jenkins:/var/jenkins_home -v /etc/localtime:/etc/localtime jenkins/jenkins
+使用docker镜像jenkins/jenkins以后台模式启动一个容器，并将容器命名为jenkins，将容器端口8080映射到宿主端口9095,50000映射到50000，将容器数据/var/jenkins_home绑定到宿主/usr/local/jenkins，/etc/localtime绑定到/etc/localtime
+
+docker run -it nginx:latest /bin/bash
+使用镜像nigix:latest以交互模式启动一个容器，在容器内执行/bin/bash命令
+
+2、docker start/stop/restart启动/停止/重启一个或多个容器
+
+docker start/stop/restart container_name
+
+3、docker rm删除一个或多个容器
+docker rm [options] container_name
+-f -> 通过SIGKILL信号强制删除一个运行中的容器
+-l -> 溢出容器间的网络连接，而非容器本身
+-v -> 删除与容器关联的卷
+【示例】
+docker rm -f db01 db02
+删除容器db01、db02
+
+docker rm -v ngnix01
+删除容器ngnix01，并删除容器挂载的数据卷
+
+docker rm $(docker ps -a -q)
+删除所有已经停止的容器
+
+4、docker exec在运行的容器中执行命令
+docker exec [options] container command [arg...]
+-d -> 分离模式，即后台执行
+-i -> 即使没有附加也保持STDIN打开
+-t -> 分配一个伪终端
+【示例】
+docker exec -it myngnix /bin/sh /root/runtest.sh
+在容器myngnix中以交互模式执行容器内的/root/runtest.sh
+
+docker exec -it ee8339704429 /bin/bash
+在容器IDee8339704429中开启一个交互模式的终端
+
+5、docker ps列出容器
+docker ps [options]
+-a -> 显示所有的容器，包括未运行的
+-f -> 根据条件过滤显示的内容
+--format -> 指定返回值的模板文件
+-l -> 显示最近创建的容器
+-n -> 列出最近创建的n个容器
+--no-trunc -> 不阶段输出
+-q -> 静默模式，只显示容器编号
+-s -> 显示总的文件大小
+输出详情介绍:
+CONTAINER ID：容器ID
+IMAGE：使用的镜像
+COMMAND：启动容器时运行的命令
+CREATED：容器创建的时间
+STATUS：容器的状态
+PORTS：容器的端口信息和使用的连接类型
+NAMES：自动分配的容器名称
+
+6、docker logs获取容器的日志
+docker logs [options] container
+-f -> 跟踪日志输出
+--since -> 显示某个开始时间的所有日志 
+-t -> 显示时间戳
+--tail -> 仅列出最新N条容器日志
+
+7、docker commit从容器创建一个新的镜像
+docker commit [options] container [repository[:tag]]
+-a -> 提交镜像的作者
+-c -> 使用dockerfile指令来创建镜像
+-m -> 提交时的说明文字
+-p -> 在commit时，将容器暂停
+
+8、docker cp用于容器和逐级之间的数据拷贝
+docker cp [options] container:src_path dest_path|-
+docker cp [options] src_path|- container:dest_path
+-L ->  保持原目标中的连接
+【示例】
+docker cp /etc/tacacs jenkins:/tacacs
+将宿主机/etc/tacacs目录拷贝到容器jenkins的/tacacs目录下
+
+docker cp jenkins:/tacacs /etc/tacacs
+将容器jenkins的/tacacs拷贝到宿主机/etc/tacacs目录下
+
+9、docker pull从镜像仓库中拉去或者更新指定的镜像
+docker pull jenkins/jenkins
+从dockerhub下载jenkins/jenkins最新镜像
+
+10、docker push将本地的镜像上传到镜像仓库，要先登录到镜像仓库
+docker login -u username -p password
+docker push myapache:v1
+
+11、docker search从dockerhub中查找镜像
+docker search [options] term
+-f <过滤条件> 列出收藏数不小于指定值的镜像
+【示例】
+docker search -f stars>10 java
+从dockerhub中查找所有镜像名包含java，并且收藏数大于10的镜像
+
+【输出参数说明】
+NAME：镜像仓库源的名称
+DESCRIPTION：镜像的描述
+OFFICIAL：是否docker官方发布
+STARS：表示点赞数
+AUTOMATED：自动构建
+
+12、docker images列出本地镜像
+docker images [options] [repository[:tag]]
+-a -> 列出本地所有镜像
+--digests -> 显示镜像的摘要信息
+-f -> 显示满足条件的镜像
+--format -> 指定返回值的模板文件
+--no-trunc -> 显示完整的镜像信息
+-q -> 只显示镜像id
+
+13、docker build用于使用Dockerfile创建镜像
+docker build [options] PATH | URL | -
+-f -> 指定要使用的Dockerfile文件路径
+-m -> 设置内存最大值
+--pull -> 尝试去更新镜像的新版本
+-q -> 安静模式，成功后只输出镜像ID
+-t -> 镜像的名称及标签，通常用name:tag或者name格式；可以在一次构建中为一个镜像设置多个标签
+【示例】
+docker build -t my-httpd .
+使用当前目录的Dcokerfile创建镜像，标签为my-httpd
+
+docker build -f /path/Dcokerfile -t my-httpd
+使用/path/Dockerfile创建镜像，标签为my-httpd
+
+14、docker info显示docker系统的信息，包括镜像和容器数

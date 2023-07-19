@@ -1,7 +1,9 @@
 # #######################################################
 winndows下的jenkins服务
 http://localhost:6535/ root/Tianxin_2015
+云服务器下的jenkins服务
 http://121.43.189.123:8099/ admin/14348e6e11a74135885ce97ae50b24e6
+云服务器下docker内的jenkins服务
 http://121.43.189.123:9095/ admin/b30253c32b4e4db7b53c08a7279a4183
 
 # #######################################################
@@ -25,6 +27,15 @@ APPSECRET: NmdvQjI2MjBkRllRNnRuaWJnSUl6dz09
 https://www.mxnzp.com/api/weather/current/深圳市?app_id=ooyx7tluqonjo1sx&app_secret=NmdvQjI2MjBkRllRNnRuaWJnSUl6dz09
 # 城市id获取接口
 https://www.mxnzp.com/api/address/list?app_id=ooyx7tluqonjo1sx&app_secret=NmdvQjI2MjBkRllRNnRuaWJnSUl6dz09
+
+# #########################################################
+showapi网址——用于查询天气等信息
+https://www.showapi.com  txyc/Tianxin_2015
+
+查询天气的api的链接：
+https://route.showapi.com/9-2?
+showapi_appid: 1453913
+showapi_sign: 916593ab6efe416d985135be43714151
 
 # ############################################################
 用于接口的测试的某个购物车网站
