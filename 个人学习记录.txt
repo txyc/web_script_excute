@@ -951,3 +951,50 @@ docker build -f /path/Dcokerfile -t my-httpd
 使用/path/Dockerfile创建镜像，标签为my-httpd
 
 14、docker info显示docker系统的信息，包括镜像和容器数
+
+# #############################################
+# 时间：20230721
+# 姓名：田鑫
+# 邮箱：965622832@qq.com
+# #############################################
+十七、sql数据库语法简要说明
+
+1、创建和删除数据库数据表
+# 创建数据库/表
+create database dbname;
+create table table_name
+(
+column1 data_type(size);
+column2 data_type(size);
+column3 data_type(size);
+column4 data_type(size);
+...
+);
+# 删除数据表/库
+truncate table table_name;
+drop table table_name;
+drop database dbname;
+
+2、插入数据
+insert into table_name(column1, column2, column3, column4)
+values(value1, value2, value3, value4);
+
+3、更改数据
+update table_name
+set column1 = value1, column2 = value2, column3 = value3, column4 = vvalue4...
+where condition;
+
+4、删除数据
+delete from table_name
+where condition;
+
+5、查询数据
+select column1，column2, ...
+from table_name;
+
+6、辅助控制条件的语句关键字，如distinct/limit/order by/group by/join/like/having
+
+# 注：where和having都是筛选条件，但是有如下区别
+# 1、where放在group by之前，having放在group by之后
+# 2、聚合函数(avg, sum, max, min, count)不能作为条件放在where之后，但可以放在having之后
+
