@@ -974,27 +974,88 @@ column4 data_type(size);
 truncate table table_name;
 drop table table_name;
 drop database dbname;
+【示例】
+【示例】
+use usr_contact_info;
+drop table if exists exam_record;
+create table if not exists exam_record (
+id int(11) primary key auto_increment comment '自增id',
+uid int(11) not null comment '用户id',
+exam_id int(11) not null comment '试卷id',
+exam_type varchar(32) comment '考试类型',
+start_time datetime not null comment '开始时间',
+submit_time datetime comment '提交时间',
+score tinyint comment '得分'
+)character set utf8;
+truncate exam_record;
 
 2、插入数据
 insert into table_name(column1, column2, column3, column4)
 values(value1, value2, value3, value4);
+【示例】
+insert into exam_record(uid,exam_id,exam_type,start_time,submit_time,score)
+values (1001,9001,'sql','2021-09-01 22:11:12','2021-09-01 23:01:12',90),
+(1001,9002,'算法','2021-09-02 09:11:12','2021-09-02 11:01:12',70),
+(1002,9001,'sql','2021-09-04 07:01:02','2021-09-04 09:00:57',76),
+(1002,9002,'算法','2021-09-04 07:01:02',null,null),
+(1003,9001,'sql','2021-09-04 08:01:02','2021-09-04 10:00:57',95),
+(1003,9002,'算法','2021-09-04 14:01:02','2021-09-04 16:00:06',85)，
+(1002, 9003, 'C语言', '2021-09-01 12:01:01', null, null),
+(1002, 9001, 'sql', '2021-07-02 19:01:01', '2021-07-02 19:30:01', 82),
+(1002, 9002, '算法', '2021-07-05 18:01:01', '2021-07-05 18:59:02', 90),
+(1003, 9002, '算法', '2021-07-06 12:01:01', null, null),
+(1003, 9003, 'C语言', '2021-09-07 10:01:01', '2021-09-07 10:31:01', 86),
+(1004, 9003, 'C语言', '2021-09-06 12:01:01', null, null),
+(1002, 9003, 'C语言', '2021-09-01 12:01:01', '2021-09-01 12:31:01', 81),
+(1005, 9001, 'sql', '2021-09-01 12:01:01', '2021-09-01 12:31:01', 88),
+(1006, 9002, '算法', '2021-09-02 12:11:01', '2021-09-02 12:31:01', 89),
+(1007, 9002, '算法', '2020-09-02 12:11:01', '2020-09-02 12:31:01', 89);
 
 3、更改数据
+#修改已有数据
 update table_name
-set column1 = value1, column2 = value2, column3 = value3, column4 = vvalue4...
+set column1 = value1, column2 = value2, column3 = value3, column4 = value4...
 where condition;
+【示例】
+update exam_record set submit_time='2099-09-01 00:00:00',score=0 where submit_time is null;
+
+#新增、删除列值，或者修改列的属性
+alter table table_name add column5 datatype; #新增一列
+alter table table_name drop column3 datatype; #删除一列
+alter table table_name modify column2 datatype; #修改一列的数据类型
+【示例】
+alter table exam_record drop school;
+alter table exam_record add school varchar(15) after uid;
+alter table exam_record modify school varchar(32) default "清华大学";
 
 4、删除数据
 delete from table_name
 where condition;
+delete from exam_record
+where submit_time is null or timestampdiff(minute,start_time,submit_time)<5
+order by uid;
+select * from exam_record limit 4;
 
 5、查询数据
 select column1，column2, ...
 from table_name;
+【示例】
+select
+    count(exam_id) as total_pv,
+    count(submit_time) as complete_pv,
+    count(distinct if(submit_time is not null, exam_id, null)) as complete_exam_cnt
+from exam_record
 
-6、辅助控制条件的语句关键字，如distinct/limit/order by/group by/join/like/having
+6、辅助控制条件的语句关键字，如if/distinct/limit/order by/group by/join/like/having
+
+#if表达式通过判断条件来返回特定值，语法：if(condition, result_true, result_false)用于提取表达式为真的列
+
+#distinct用于给指定列去重
+
+#limit用于选取指定条数的数据
 
 # 注：where和having都是筛选条件，但是有如下区别
 # 1、where放在group by之前，having放在group by之后
 # 2、聚合函数(avg, sum, max, min, count)不能作为条件放在where之后，但可以放在having之后
+
 
